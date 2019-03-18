@@ -14,6 +14,8 @@ var (
 	WebsocketTimeout = time.Second * 60
 	// WebsocketKeepalive enables sending ping/pong messages to check the connection stability
 	WebsocketKeepalive = false
+	// Websocket Proxy
+	Proxy = ""
 )
 
 // WsPartialDepthEvent define websocket partial depth book event

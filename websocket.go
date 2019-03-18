@@ -4,6 +4,8 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"net/http"
+	"net/url"
 )
 
 // WsHandler handle raw websocket message
@@ -23,7 +25,13 @@ func newWsConfig(endpoint string) *wsConfig {
 }
 
 var wsServe = func(cfg *wsConfig, handler WsHandler, errHandler ErrHandler) (doneC, stopC chan struct{}, err error) {
-	c, _, err := websocket.DefaultDialer.Dial(cfg.endpoint, nil)
+	dialer := websocket.DefaultDialer
+	if Proxy != "" {
+		dialer.Proxy = func(request *http.Request) (*url.URL, error) {
+			return url.Parse(Proxy)
+		}
+	}
+	c, _, err := dialer.Dial(cfg.endpoint, nil)
 	if err != nil {
 		return nil, nil, err
 	}
